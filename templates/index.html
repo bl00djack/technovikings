@@ -1,6 +1,65 @@
 <html>
-<head></head>
-<body>
-<h2>Hello Vikings!</h2>
-</body>
+  <head>
+    <script src="static/js/jquery-3.2.0.min.js"></script>
+    <script>
+    // var Img = new Image;
+    // Img.src = "static/images/football-pitch.png";
+    var startOffSetX, startOffSetY;
+    var canvasLeft, canvasTop;
+    var ctx;
+
+    function allowDrop(ev){
+      ev.preventDefault();
+    }
+
+    function mousedown(ev){
+      startOffSetX = ev.offsetX;
+      startOffSetY = ev.offsetY;
+    }
+
+    function dragstart(ev){
+      ev.originalEvent.dataTransfer.setData("text", ev.target.className);
+    }
+
+    function drop(ev){
+      ev.preventDefault();
+
+      var dropX = ev.clientX - canvasLeft - startOffSetX;
+      var dropY = ev.clientY - canvasTop - startOffSetY;
+      var id = ev.originalEvent.dataTransfer.getData("Text");
+      var dropElement = $("." + id)[0];
+      // draw the drag image at the drop coordinates
+      ctx.drawImage(dropElement, dropX, dropY);
+      $(dropElement).width(24);
+      $(dropElement).height(24);
+    }
+
+    $(document).on("mousedown", ".img1", mousedown);
+    $(document).on("dragstart", ".img1", dragstart);
+
+    $(document).ready(function(){
+      var canvas = $("#football-pitch");
+      ctx = canvas[0].getContext('2d');
+      canvasLeft = canvas.offset().left;
+      canvasTop = canvas.offset().top;
+      canvas.on("drop", drop);
+      canvas.on("dragover", allowDrop);
+
+    });
+    </script>
+    <style>
+    #football-pitch{
+      background:url("static/images/football-pitch.png");
+      background-size: cover;
+    }
+    </style>
+  </head>
+  <body>
+    <h2>Hello Vikings!</h2>
+    <canvas id="football-pitch" width="1000" height="800">
+
+    </canvas>
+    <img class="img1" src="static/images/player.jpg" width="24" height="24" draggable="true"/>
+  </body>
+  <!-- // <script src="static/js/canvas.js?d=adsdfdasf"></script> -->
 </html>
